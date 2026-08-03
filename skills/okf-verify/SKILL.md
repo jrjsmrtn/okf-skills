@@ -8,7 +8,7 @@ description: >
   its place, and stamp the release. Use when concepts are approaching `stale_after`,
   after a scheduled gate reports expiry, or before cutting a bundle release.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 license: MIT
 ---
 
@@ -125,16 +125,20 @@ A tracking corpus needs a deletion criterion or it only grows. A workable one:
 
 > Past `stale_after` for two consecutive review cycles → **delete, don't carry**.
 
-This requires countable cycles, which is why the bundle's releases are tagged and its `log.md` is
-headed by release. Deletion is a legitimate outcome of a review, and a concept nobody re-verified
+This requires countable cycles, which is why the bundle's releases are tagged and its `log.md`
+preamble carries a release map. Deletion is a legitimate outcome of a review, and a concept nobody re-verified
 twice is telling you it was not worth the file.
 
 ### Step 6 — Stamp the release
 
-1. Entries accumulated under `## Unreleased` in `knowledge/log.md`
-2. Rename that heading to `## vX.Y.Z — <ISO date>`
+1. Entries accumulated under the newest ISO date heading in `knowledge/log.md`
+2. Add the release to the **preamble release map** — `**v0.6.0** 2026-08-14 · **v0.5.0** …`
 3. Mirror it in `CHANGELOG.md`
 4. Tag
+
+**Do not rename a heading to the release.** `## v0.6.0 — 2026-08-14` violates OKF §9, which requires
+date headings in ISO 8601 `YYYY-MM-DD` form. The log is date-grouped by design; the release map in
+the preamble is the conformant place a version lives, and `okf validate` will fail the other form.
 
 **Lead the changelog entry with what was learned, not what was touched.** A file list is recoverable
 from git; the synthesis is not. If three corrections in a release converge on one structural point,
@@ -147,40 +151,39 @@ Everything below must pass before the tag.
 ```bash
 BUNDLE=knowledge
 
-# 1. Nothing expired, and nothing claims verification it does not have
+# 1. Spec conformance, including expiry (§5.5) and log headings (§9)
+okf validate "$BUNDLE"   # exit 1 on any ERROR; stale concepts appear as WARN findings
+okf lint "$BUNDLE"
+
+# 2. Nothing claims verification it cannot have had — okf does not check this
 python3 - "$BUNDLE" <<'PY'
-import sys, yaml, pathlib, datetime
-root = pathlib.Path(sys.argv[1]); today = datetime.date.today(); fail = False
+import sys, yaml, pathlib
+root = pathlib.Path(sys.argv[1]); fail = False
 for p in sorted(root.rglob('*.md')):
     if p.name in ('index.md', 'log.md'):
         continue
     meta = yaml.safe_load(p.read_text().split('---')[1]) or {}
-    d = meta.get('stale_after')
-    if isinstance(d, str):
-        d = datetime.date.fromisoformat(d)
-    if d and d < today:
-        print(f"FAIL expired {d}: {p.relative_to(root)}"); fail = True
     if meta.get('verified') and not meta.get('sources'):
         print(f"FAIL {p.relative_to(root)}: `verified` with no `sources` to have checked")
         fail = True
 if not fail:
-    print("expiry + verification OK")
+    print("verification coherence OK")
 sys.exit(1 if fail else 0)
 PY
 
-# 2. The release is named inside the bundle, not only in a git tag
-grep -qE '^## v[0-9]+\.[0-9]+\.[0-9]+ — [0-9]{4}-[0-9]{2}-[0-9]{2}$' "$BUNDLE/log.md" \
-  && echo "log.md carries a dated release heading" \
-  || echo "FAIL: no dated release heading in log.md"
+# 3. The release is named inside the bundle, not only in a git tag
+grep -qE '^\*\*Releases\*\*' "$BUNDLE/log.md" \
+  && echo "release map present in the preamble" \
+  || echo "FAIL: no release map — a detached copy cannot name its version"
 
-# 3. No unreleased entries left dangling at tag time
-grep -q '^## Unreleased' "$BUNDLE/log.md" \
-  && echo "NOTE: an Unreleased section is still open — rename it before tagging" \
-  || echo "no open Unreleased section"
+# 4. No heading violates §9 (a release heading is the way this goes wrong)
+grep -nE '^## ' "$BUNDLE/log.md" | grep -vE '^[0-9]+:## [0-9]{4}-[0-9]{2}-[0-9]{2}$' \
+  && echo "FAIL: non-ISO date heading above (OKF §9)" \
+  || echo "all log.md headings are ISO dates"
 ```
 
-Run the bundle's full gate suite as well. These checks cover expiry and release hygiene; the suite
-covers conformance, attribution and links.
+To triage expiry *before* it fails, use Step 1's listing — `okf validate` tells you what is already
+stale, not what is about to be.
 
 ## Anti-Patterns
 

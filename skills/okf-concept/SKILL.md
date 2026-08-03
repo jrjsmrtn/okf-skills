@@ -8,7 +8,7 @@ description: >
   a subject earns a file at all, choosing its `stale_after`, or wiring per-claim
   attribution between footnotes and `sources`.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 license: MIT
 ---
 
@@ -44,10 +44,11 @@ conformance break gets waved through as taste.
 |---|---|---|
 | Parseable YAML frontmatter | **yes** | |
 | Non-empty `type` | **yes** | |
-| Footnote label is the join key into `sources[].id` | **yes** — §5.1 | |
-| `title`, `description`, `resource`, `tags`, `status` | no — optional families | used throughout |
+| Footnote label is the join key into `sources[].id` | **yes** — §5.1, and `okf lint` checks it | |
+| `log.md` headings are ISO 8601 dates | **yes** — §9 | |
+| `title`, `description`, `resource`, `tags`, `status` | no — *recommended*; `okf lint` warns | used throughout |
 | `verified`, `stale_after`, `generated` | no — optional families | **load-bearing here** |
-| Every footnote *definition* is referenced | no | ours |
+| Every footnote *definition* is referenced | no | ours — nothing upstream checks it |
 | A `stale_after` tier table | no | ours |
 
 Everything in the right-hand column is a choice a bundle makes. Write it down in the bundle's own
@@ -110,13 +111,13 @@ The Source track grades a revision, not the artifact a consumer fetched.[^slsa-s
 
 Three failure modes, all invisible on rendered output:
 
-| Fault | What the reader sees |
-|---|---|
-| Label is not a `sources[].id` | a citation that resolves to nothing |
-| Label referenced, never defined | a dangling marker |
-| Label defined, never referenced | **nothing at all** — the source silently vanishes from the page |
+| Fault | What the reader sees | Caught by |
+|---|---|---|
+| Label is not a `sources[].id` | a citation that resolves to nothing | `okf lint` (§5.1) |
+| Label referenced, never defined | a dangling marker | the local check below |
+| Label defined, never referenced | **nothing at all** — the source silently vanishes | the local check below |
 
-The third is the quiet one. Run the check in Validation rather than reading for it.
+The third is the quiet one. Run the checks in Validation rather than reading for them.
 
 **An uncited `sources[].id` is legitimate** and should not be flagged: a narrative concept carries a
 bibliography rather than per-claim attribution. Only the footnote→source direction is an error.
@@ -155,37 +156,42 @@ no `verified` entry. See `okf-verify`.
 
 ## Validation
 
-Run against the file you just wrote. Requires `pyyaml`.
+**First, `okf`.** The vendor-neutral CLI ([`okfcli/okf`](https://github.com/okfcli/okf)) covers the
+spec, including the footnote→`sources[].id` join, which §5.1 makes a conformance matter rather than a
+style one:
+
+```bash
+okf validate "$BUNDLE"   # §5.2 datetimes, §5.5 expiry, §8 index frontmatter, §9 log headings, links
+okf lint "$BUNDLE"       # recommended fields; footnote label -> sources[].id (§5.1)
+```
+
+**Then the two directions `okf` does not check** (measured against v0.2.1, 2026-08-03). Both concern
+footnote *definitions* rather than the sources join, and both are invisible on rendered output:
 
 ```bash
 python3 - path/to/concept.md <<'PY'
 import re, sys, yaml
 src = open(sys.argv[1]).read()
 _, fm, body = src.split('---', 2)
-meta = yaml.safe_load(fm) or {}
-if not meta.get('type'):
-    print("FAIL: `type` is missing or empty — the one key OKF requires"); sys.exit(1)
-ids  = {s['id'] for s in (meta.get('sources') or [])}
 refs = set(re.findall(r'\[\^([^\]]+)\](?!:)', body))
 defs = set(re.findall(r'^\[\^([^\]]+)\]:', body, re.M))
 fail = False
-for label, s in [("cited but not a sources[].id", refs - ids),
-                 ("cited but never defined",      refs - defs),
-                 ("defined but never cited",      defs - refs)]:
+for label, s in [("cited but never defined (renders as a dangling marker)", refs - defs),
+                 ("defined but never cited (renders as nothing at all)",    defs - refs)]:
     if s:
         print(f"FAIL {label}: {', '.join(sorted(s))}")
         fail = True
 if not fail:
-    print(f"attribution OK ({len(refs)} footnotes, {len(ids)} sources)")
+    print(f"footnote definitions OK ({len(refs)} referenced, {len(defs)} defined)")
 sys.exit(1 if fail else 0)
 PY
 ```
 
-Expected on a clean concept: `attribution OK (N footnotes, M sources)`, exit 0. Any `FAIL` line
-exits 1, so this works unmodified as a hook or CI step.
+Expected on a clean concept: `footnote definitions OK (N referenced, M defined)`, exit 0. Any `FAIL`
+exits 1, so it works unmodified as a hook or CI step.
 
-If the bundle ships a full gate suite, run that too — this check covers one file, the suite covers
-the corpus and its links.
+The second case is the quiet one and the reason this check exists: a definition nobody references
+renders as **nothing**, so a source that reads as cited in the file is absent from the output.
 
 ## Anti-Patterns
 

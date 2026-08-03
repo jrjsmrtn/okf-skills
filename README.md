@@ -35,17 +35,29 @@ having a skill for are the ones that went wrong first:
   had been retired.
 - **A bundle that cannot leave its repository is not a bundle.** OKF calls it the unit of
   distribution; the version usually lives in a git tag, which stays behind when the bundle travels.
+  The obvious fix — heading `log.md` by release — is a **spec violation** (§9 requires ISO 8601 date
+  headings). The log is date-grouped by design, so a release map in the preamble is what is left.
 
 ## Validation
 
 Every skill's Validation section is executable — commands with expected output, exit 0 on pass and
 1 on failure, so they work unmodified as a hook or CI step
 ([ADR-0009](https://github.com/jrjsmrtn/project-orchestration-skills): prefer a check that fails over
-a paragraph that instructs). They need `python3` and `pyyaml`, and nothing else.
+a paragraph that instructs).
 
-The skills deliberately do **not** ship the full gate suite. A checker that only Claude Code users
-can run does not close the gap that matters — a stranger fetching a published bundle still cannot
-verify it. That is a job for a standalone binary, not a plugin.
+**Conformance is delegated to [`okfcli/okf`](https://github.com/okfcli/okf)**, the vendor-neutral Go
+CLI — one static binary, JSON output, non-zero exit on error. It covers the spec more thoroughly than
+a local script will: §5.1 footnote→`sources[].id`, §5.2 ISO datetimes, §5.5 expiry, §8 index
+frontmatter, §9 log headings, and link resolution.
+
+The skills add only what it does not check, measured against v0.2.1 on 2026-08-03:
+
+- a footnote **cited but never defined** — renders as a dangling marker
+- a footnote **defined but never cited** — renders as *nothing*, so a source that reads as cited is
+  absent from the output
+- `verified` present with no `sources` to have checked
+
+Those need `python3` and `pyyaml`. Everything else, `okf` does better.
 
 ## Installation
 
