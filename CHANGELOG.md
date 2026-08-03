@@ -12,6 +12,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-03
+
+### Added
+
+- **`okf-verify` Step 2: "When the primary source will not load".** The skill told you to open the
+  document and assumed you could. Re-verifying an EU regulation showed the assumption is not safe,
+  and that the failure mode is worse than a plain error: **success with no content**. `eur-lex.europa.eu`
+  answers **HTTP 202 with a zero-byte body** to every non-browser client, so a fetch "succeeds",
+  a script reports it fetched, and the reviewer quietly falls back to a search summary — becoming the
+  thing the step exists to replace.
+- Two symptoms to recognise (success-with-no-content, and the wrong representation — metadata or an
+  SPA shell, large and plausible and answering nothing), the rule that an unreachable source is a
+  **blocked** check rather than a downgraded one, and the guidance to record a non-obvious retrieval
+  route in the project's conventions rather than in a concept: a concept carries the claim, not the
+  recipe.
+- Two anti-patterns: letting an unreachable source become a secondary one (the substitution is silent
+  and the `verified` entry looks identical afterwards), and treating a 200 as a fetch.
+
+### Notes
+
+- The worked example includes a `curl` command, run verbatim before shipping. It matters that it was
+  **wrong the first time**: written from memory without `Accept-Language`, it returned HTTP 400 for
+  every document tried. Both headers are load-bearing, established by ablation, and verified across
+  four instruments — GDPR, NIS2, the CRA and the AI Act. The skill says so, because a retrieval
+  method is a control and an unrun one is a claim.
+
 ## [0.1.1] - 2026-08-03
 
 **0.1.0 shipped guidance that violated the spec. This corrects it.**
@@ -73,6 +99,7 @@ being edited in lockstep. Extraction was prompted by editing both, identically, 
   negative-tested against a deliberately broken fixture — per ADR-0009, a control that has not been
   run is a claim, not a control.
 
-[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/jrjsmrtn/okf-skills/releases/tag/v0.1.0

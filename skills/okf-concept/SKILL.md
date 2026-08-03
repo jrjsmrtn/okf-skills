@@ -8,7 +8,7 @@ description: >
   a subject earns a file at all, choosing its `stale_after`, or wiring per-claim
   attribution between footnotes and `sources`.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 license: MIT
 ---
 

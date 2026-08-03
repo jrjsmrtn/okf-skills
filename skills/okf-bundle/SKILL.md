@@ -8,7 +8,7 @@ description: >
   wiring. Use when creating a new OKF bundle, extracting one from a parent
   repository, or auditing an existing bundle's structure.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 license: MIT
 ---
 

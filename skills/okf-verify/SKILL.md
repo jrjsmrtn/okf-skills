@@ -8,7 +8,7 @@ description: >
   its place, and stamp the release. Use when concepts are approaching `stale_after`,
   after a scheduled gate reports expiry, or before cutting a bundle release.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 license: MIT
 ---
 
@@ -84,6 +84,42 @@ cycle they produced four separate errors that reading the primary document caugh
 document cited as current, a contribution attributed to a paper that does not claim it, a pipeline
 described with the wrong number of stages, and a figure that did not appear in the report it was
 attributed to.
+
+### When the primary source will not load
+
+This is the step where a cycle quietly fails, because the fallback is so easy: the document does not
+come back, a search result does, and the re-verification becomes the thing it exists to replace.
+
+**Treat an unreachable primary source as a blocked check, not a downgraded one.** Either find another
+route to the same document, or record in the concept that the claim rests on secondary sourcing —
+never silently substitute.
+
+The failure is rarely a clean error. Two shapes to recognise:
+
+| Symptom | Why it is dangerous |
+|---|---|
+| **Success with no content** — HTTP 200/202, empty body | Nothing raises. A script reports "fetched", a reader assumes checked |
+| **The wrong representation** — metadata, a landing page, an SPA shell | Large, plausible, and answers none of the questions you asked |
+
+Worked example, found on 2026-08-03 re-verifying an EU regulation. `eur-lex.europa.eu` returns
+**HTTP 202 with a zero-byte body** to every non-browser client — agent fetch tools and `curl` alike,
+on the ELI, HTML and PDF endpoints. The working route was content negotiation on a different host:
+
+```bash
+curl -sL -H "Accept: application/xhtml+xml" -H "Accept-Language: eng" \
+  "https://publications.europa.eu/resource/celex/32024R2847" -o doc.xhtml
+```
+
+Both headers are load-bearing — `Accept` alone returns 400, and with no `Accept` at all the same URL
+serves RDF metadata that answers no legal question.
+
+**Record the route when it is non-obvious**, in the project's conventions rather than in the concept:
+a concept carries the claim, not the retrieval recipe. The next reviewer should not have to rediscover
+it, and "the source was unreachable" should appear in the log rather than being papered over.
+
+**Verify the recipe before you write it down.** The command above was first recorded from memory,
+minus `Accept-Language`, and returned 400 for every document tried. A retrieval method is a control;
+an unrun one is a claim.
 
 When a claim changes:
 
@@ -193,6 +229,10 @@ stale, not what is about to be.
 - **Verifying claims without checking the version.** Every claim can be accurate about a superseded
   document.
 - **Trusting a search summary as a source.** Treat it as a lead. Open the document.
+- **Letting an unreachable source become a secondary one.** The substitution is silent and the
+  `verified` entry looks identical afterwards. Say the source was unreachable, or find another route.
+- **Treating a 200 as a fetch.** An empty body, a landing page or a metadata representation all
+  return success. Check that what came back is the document.
 - **Correcting a claim without repointing its citers.** A reassigned label leaves every
   cross-reference quietly wrong.
 - **Letting the corpus only grow.** Without a deletion criterion, review becomes archiving.
