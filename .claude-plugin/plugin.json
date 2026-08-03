@@ -1,0 +1,11 @@
+{
+  "name": "okf-skills",
+  "version": "0.1.0",
+  "description": "Skills for authoring and maintaining Open Knowledge Format bundles — scaffold a conformant bundle, write a concept whose claims are attributable, and run the re-verification cycle that keeps them true.",
+  "repository": "https://github.com/jrjsmrtn/okf-skills",
+  "author": {
+    "name": "Georges Martin",
+    "email": "jrjsmrtn@gmail.com"
+  },
+  "keywords": ["okf", "knowledge", "documentation", "provenance", "verification"]
+}

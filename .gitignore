@@ -1,0 +1,5 @@
+# Private/local context — never track
+CLAUDE.local.md
+
+# Local dev convenience (personal tmux session layout)
+.tmuxp.yml
