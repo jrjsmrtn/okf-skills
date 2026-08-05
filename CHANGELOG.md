@@ -12,6 +12,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-08-05
+
+Four additions, each from a failure or discovery while authoring a second OKF bundle and extending
+the first — not from review of the skills in the abstract.
+
+### Added
+
+- **`okf-concept`: status records.** When a subject provably exists but its text is unreachable, a
+  concept may document *existence, adoption, force and publication* while explicitly declining to say
+  what it contains. With the three rules that keep it honest — say so at the top, never paraphrase a
+  reachable superseded draft in its place, and use sources that are primary **for the claims actually
+  made**. A status record makes different claims and needs *different sources, not weaker ones*
+- **`okf-concept`: `stale_after` from the source's own review date.** A source stating when it will
+  next be reviewed has answered the question a tier only guesses at. Record in the re-verification
+  notes that the source supplied the date, or the next reviewer reads an unusual value as an error
+- **`okf-concept`: "Editing concepts safely"** — the first tooling guidance in these skills for
+  *changing* a bundle rather than validating one. `yq` for frontmatter, exact-match replacement with
+  an assertion for bodies, `mq` for structural queries with a caution about round-trip rewriting
+  - **The failure mode it names: an unasserted replace is a silent no-op.** It cannot distinguish
+    "already correct" from "my pattern is wrong", and both return success. Three edits failed this way
+    in one session — a folded YAML scalar where the search string spanned a line break, an indentation
+    mismatch in a bullet continuation, and a link-reference style the file did not use
+- **`okf-verify`: bot challenges, and what a status code stops proving.** A proof-of-work
+  interstitial returns `200` with a full page and no document — and returns it for *any* path,
+  including ones that do not exist. So on those hosts a status code distinguishes neither retrieval
+  nor existence, and "source located, retrieval blocked" is indistinguishable from "the URL is wrong".
+  Two sources were logged as blocked on exactly that reasoning; both URLs were simply wrong
+- **`okf-verify`: when one source publishes two versions.** HTML and PDF, or a rendered page and a
+  repository, can disagree — and then **the comparison is the verification**. Count rather than skim,
+  and prove absence rather than truncation by checking for the sections that *bracket* the passage.
+  Where nothing settles which governs, record the disagreement as the finding and cite both
+
 ## [0.1.2] - 2026-08-03
 
 ### Added

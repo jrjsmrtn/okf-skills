@@ -8,7 +8,7 @@ description: >
   a subject earns a file at all, choosing its `stale_after`, or wiring per-claim
   attribution between footnotes and `sources`.
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 license: MIT
 ---
 
@@ -89,6 +89,31 @@ Two sourcing rules, both learned by getting them wrong:
 - **Cite the primary instrument, not commentary about it.** A webinar deck describing a superseded
   draft is not a source for what the current rule requires.
 
+#### When the text is unreachable but the subject provably exists
+
+Occasionally a subject is *known* to exist — minuted, voted, announced — while its actual text cannot
+be read. The tempting moves are both wrong: skip it, or quote a superseded draft that *is* reachable.
+
+**A status record is the third option.** It documents *existence, adoption, force and publication* on
+primary sources about **those** facts, and explicitly declines to say what the subject contains.
+
+Worked example: an organisation's policy approved by a minuted unanimous vote, effective
+immediately, and nine months later absent from the page its own minutes said it would appear on —
+with the agreed text surviving only as a comment on an unreachable ticket. A published draft of it
+existed, and quoting that would have been the error the corpus exists to prevent.
+
+Three rules, or it becomes the thing it is avoiding:
+
+- **Say plainly, at the top, that the record does not state the subject's content.** A reader who
+  misses that will treat everything below as a summary of the rule.
+- **Never paraphrase a superseded draft in its place.** List it in `sources` labelled as superseded,
+  so the next reviewer does not rediscover it and assume it is current.
+- **Sources must be primary for the claims actually made.** Minutes are a primary source for *what was
+  decided*; they are not a source for the decision's text.
+
+The distinction that keeps this honest: a status record makes **different claims**, and so needs
+**different sources — not weaker ones**.
+
 ### Step 4 — Wire attribution
 
 The footnote label **is** the join key. A footnote whose label is not a `sources[].id` attributes
@@ -140,6 +165,12 @@ for, not a judgement made.
 on the reasoning that ratified specifications do not move; the specification then shipped two minor
 versions and rewrote its threat taxonomy, reassigning letters that other concepts cited by letter. A
 specification under active development belongs at ~6 months whatever its status field says.
+
+**When the source names its own review date, use that instead of a tier.** A policy stating *"at the
+latest this will be reviewed at the start of 2027"* has told you when it may change; a tier is a
+guess about the same question and a worse one. Set `stale_after` just after the named date and say in
+the re-verification notes that the source supplied it — otherwise the next reviewer reads an unusual
+value as a mistake and rounds it back to a tier.
 
 Clustering *within* a tier is fine and intended — concepts that share a volatility class tend to
 share sources, so re-verifying them in one sitting is cheaper. Clustering *across* classes, because
@@ -206,6 +237,37 @@ renders as **nothing**, so a source that reads as cited in the file is absent fr
   prose instead.
 - **Treating the gate's silence as correctness.** Gates verify structure, not sense. Links resolving
   and YAML parsing says nothing about whether a sentence contradicts the paragraph above it.
+
+## Editing concepts safely
+
+A concept is YAML frontmatter above prose, with footnote labels that must stay joined to
+`sources[].id`. That is exactly the shape naive editing corrupts, and `okf validate` runs *after* the
+damage.
+
+- **Read and query frontmatter with `yq`**, never a regex. `stale_after`, `verified`, `sources[].id`
+  are structured data; treating them as text is how a two-space indent change becomes a parse error.
+- **Edit bodies by exact-match replacement with an assertion**, not `sed -i`. Assert the pattern is
+  present *before* writing, and prefer failing loudly to writing hopefully.
+- **`mq` queries Markdown structurally**, which beats regex for "find every footnote definition" or
+  "list the headings". Be cautious about using any processor to **rewrite** a concept: round-trip
+  fidelity is a real risk, the `markdown-fidelity` harness exists to measure it, and the ranking
+  between processors has already reversed once — so check current numbers rather than trusting a
+  remembered result.
+
+**The failure mode worth naming: an unasserted replace is a silent no-op.** It cannot distinguish
+*"already correct"* from *"my pattern is wrong"*, and both return success. Three edits failed this way
+in one session — a folded YAML scalar where the search string spanned a line break, an indentation
+mismatch in a bullet continuation, and a link-reference style the file did not use. Each reported
+success and changed nothing.
+
+```python
+old = "stale_after: 2027-02-01"
+assert old in text, "pattern not found — check before assuming it applied"
+text = text.replace(old, "stale_after: 2027-01-15", 1)
+```
+
+`okf validate` and `okf lint` are the gate, not the editor. They catch a corrupted concept; they do
+not catch an edit that never happened.
 
 ## Related Skills
 

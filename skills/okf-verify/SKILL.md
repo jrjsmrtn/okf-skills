@@ -8,7 +8,7 @@ description: >
   its place, and stamp the release. Use when concepts are approaching `stale_after`,
   after a scheduled gate reports expiry, or before cutting a bundle release.
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 license: MIT
 ---
 
@@ -100,6 +100,35 @@ The failure is rarely a clean error. Two shapes to recognise:
 |---|---|
 | **Success with no content** — HTTP 200/202, empty body | Nothing raises. A script reports "fetched", a reader assumes checked |
 | **The wrong representation** — metadata, a landing page, an SPA shell | Large, plausible, and answers none of the questions you asked |
+| **A bot challenge** — HTTP 200, a full HTML page, no document | Passes every check except "is this the thing I asked for" |
+
+**A challenge page also destroys the existence signal.** Hosts running proof-of-work interstitials
+return the same `200` for *any* path, including ones that do not exist — so on those hosts a status
+code distinguishes neither retrieval nor existence, and *"source located, retrieval blocked"* and
+*"the URL is wrong"* look identical. Two sources were once logged as blocked on that reasoning; both
+URLs were simply wrong. **Confirm a URL from a page that actually resolves before recording a source
+as unreachable.**
+
+### When one source publishes two versions
+
+A specification, policy or standard often exists as HTML *and* PDF, or as a rendered page *and* a
+repository. **They can disagree, and then the comparison is the verification** — reading either alone
+returns a confident wrong answer.
+
+Observed: a vendor's open-source policy prohibits a practice in its dated PDF and says nothing about
+it on the live web page. Which is current was not establishable, and the widely-repeated claim about
+that vendor traces to the PDF alone.
+
+Two techniques:
+
+- **Count, do not skim.** Extract the text and count occurrences of the term. "I did not see it" is
+  not a finding.
+- **Prove absence rather than truncation.** Check for the sections that *bracket* the passage you
+  expect. If the neighbours are present and the passage is not, it is genuinely absent — otherwise
+  you may be reading a partial fetch.
+
+When the two disagree and nothing settles which governs, **record the disagreement as the finding**
+and cite both. Picking one silently is the failure.
 
 Worked example, found on 2026-08-03 re-verifying an EU regulation. `eur-lex.europa.eu` returns
 **HTTP 202 with a zero-byte body** to every non-browser client — agent fetch tools and `curl` alike,
