@@ -3,12 +3,10 @@
 # SPDX-License-Identifier: MIT
 name: okf-concept
 description: >
-  Author or revise a single concept in an Open Knowledge Format bundle.
-  Use when adding a concept to an OKF bundle, correcting one, deciding whether
-  a subject earns a file at all, choosing its `stale_after`, or wiring per-claim
-  attribution between footnotes and `sources`.
+  Author or revise a single concept in an Open Knowledge Format bundle. Use when adding a concept to an OKF bundle, correcting one, deciding whether a subject earns a file at all, choosing its `stale_after`, or wiring per-claim attribution between footnotes and `sources`.
+
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 license: MIT
 ---
 

@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-08-05
+
+### Added
+
+- **`okf-verify`: when the primary source is a scan.** A PDF with no text layer is not unreachable,
+  it is *unread* — and extractors return **exit 0 with an empty file**, which a script reports as
+  success. Check the word count, never the status
+  - **OCR output is not quotable without verification.** Recognition silently substitutes characters,
+    and a wrong character *inside quotation marks* is worse than no quote — it is citable, looks
+    authoritative, and nothing downstream catches it. This is the sharpest form of the corpus's
+    central risk: a stale claim is visibly stale, but a quotation that is an OCR artefact reads as
+    perfectly sourced
+  - Record which path produced the text (`native` vs `ocr`) in the re-verification notes, so the next
+    reviewer knows how far to trust the transcription
+
 ## [0.1.4] - 2026-08-05
 
 **Graduated to the public marketplace** `jrjsmrtn-skills`, per `skills-workspace` ADR-0005's

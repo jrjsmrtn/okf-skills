@@ -3,12 +3,10 @@
 # SPDX-License-Identifier: MIT
 name: okf-verify
 description: >
-  Run the re-verification cycle over an OKF bundle — triage by expiry, re-check
-  claims against upstream, run a version-currency sweep, prune what no longer earns
-  its place, and stamp the release. Use when concepts are approaching `stale_after`,
-  after a scheduled gate reports expiry, or before cutting a bundle release.
+  Run the re-verification cycle over an OKF bundle — triage by expiry, re-check claims against upstream, run a version-currency sweep, prune what no longer earns its place, and stamp the release. Use when concepts are approaching `stale_after`, after a scheduled gate reports expiry, or before cutting a bundle release.
+
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 license: MIT
 ---
 
@@ -108,6 +106,26 @@ code distinguishes neither retrieval nor existence, and *"source located, retrie
 *"the URL is wrong"* look identical. Two sources were once logged as blocked on that reasoning; both
 URLs were simply wrong. **Confirm a URL from a page that actually resolves before recording a source
 as unreachable.**
+
+### When the primary source is a scan
+
+A PDF with no text layer is not unreachable — it is unread. `pdftotext` and similar return **exit 0
+and an empty file**, which a script reports as success. Check the **word count**, never the status.
+
+Where a text layer is absent, OCR is the route (`xberg` and similar run it automatically). Two rules
+make the difference between a usable source and a corrupted record:
+
+- **Record which path produced the text.** Extractors expose this — `extraction_method` is `native`
+  for a text layer, `ocr` for recognition. Note it in the re-verification notes; the next reviewer
+  needs to know how much to trust the transcription.
+- **OCR output is not quotable without verification.** Recognition silently substitutes characters,
+  and a wrong character *inside quotation marks* is worse than no quote: it is citable, it looks
+  authoritative, and nothing downstream will catch it. **Before quoting an OCR'd passage, check it
+  against the rendered page.**
+
+This is the sharpest form of the corpus's central risk. A concept whose claim is merely stale is
+visibly stale; a concept whose *quotation* is an OCR artefact reads as perfectly sourced and is
+wrong in the one place the format promises accuracy.
 
 ### When one source publishes two versions
 
