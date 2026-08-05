@@ -12,6 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-08-05
+
+### Fixed
+
+- **`okf-bundle` now states that no gate reads an `index.md` heading**, and that the link checker does
+  not open `index.md` at all — so a broken link *inside* an index is invisible to it too. These are
+  the files where the tooling stops helping, and the section previously listed their constraints
+  without saying that nothing enforces them
+  - Observed in a bundle that shipped four of six category indexes headed `# Uarchitecture`,
+    `# Uinception`, `# Ulearning`, `# Uorchestration`. Every gate passed; only the two written by hand
+    were correct
+  - **The cause is not an OKF problem, which is why the skill now names it.** The headings were
+    generated with `sed 's/^./\U&/'`; **`\U` is a GNU sed extension** and BSD sed — the default on
+    macOS — emits the letter literally. It fails plausibly rather than loudly, which is how it survived
+    review
+
 ## [0.1.5] - 2026-08-05
 
 ### Added
@@ -171,7 +187,11 @@ being edited in lockstep. Extraction was prompted by editing both, identically, 
   negative-tested against a deliberately broken fixture — per ADR-0009, a control that has not been
   run is a claim, not a control.
 
-[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.6...HEAD
+[0.1.6]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.5...v0.1.6
+[0.1.5]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.4...v0.1.5
+[0.1.4]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.3...v0.1.4
+[0.1.3]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/jrjsmrtn/okf-skills/releases/tag/v0.1.0

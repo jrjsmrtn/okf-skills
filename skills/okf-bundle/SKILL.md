@@ -66,6 +66,27 @@ break and are not enforced by generic Markdown tooling:
 - An index's job is to link onward with a one-line gloss per entry. It is a table of contents, not a
   concept.
 
+**No gate reads an `index.md` heading.** `okf validate` and `okf lint` both pass on a subdirectory
+index whose title is wrong, misspelled or empty, and the link checker does not open `index.md` at all
+— so a broken link *inside* an index is invisible to it too. These are the files where the tooling
+stops helping, and the only ones that need reading with eyes before release.
+
+Observed: four of six category indexes in a bundle shipped headed `# Uarchitecture`, `# Uinception`,
+`# Ulearning`, `# Uorchestration`. Every gate passed. Only the two written by hand were correct.
+
+**The cause is worth knowing, because it is not an OKF problem.** Those headings were generated with
+`sed 's/^./\U&/'` to capitalise the directory name. **`\U` is a GNU sed extension**; BSD sed — the
+default `sed` on macOS — has no case-conversion escape and emits the letter literally:
+
+```bash
+echo architecture | sed  's/^./\U&/'   # BSD  → Uarchitecture   ← silently wrong
+echo architecture | gsed 's/^./\U&/'   # GNU  → Architecture
+```
+
+It fails plausibly rather than loudly, which is why it survived. When scaffolding index files, write
+the headings by hand — there are six of them, once — or capitalise in the shell (`${name^}`, bash 4+)
+rather than reaching for a `sed` escape whose availability varies by platform.
+
 ## Scope before content
 
 Write the admission test before the first concept, and write it somewhere that is not the bundle.
