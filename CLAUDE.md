@@ -58,7 +58,7 @@ structure and versioning.
   labelled as one
 - SPDX license headers (MIT)
 - `metadata.version` in every SKILL.md tracks `version` in `plugin.json` — bump in lockstep
-- Installation: private incubator marketplace `jrjsmrtn-private-skills` (ADR-0005)
+- Installation: public marketplace `jrjsmrtn-skills` (ADR-0005); graduated 2026-08-05 per skills-workspace ADR-0012 as amended
 
 ## Known Limits
 

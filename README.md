@@ -62,11 +62,11 @@ Those need `python3` and `pyyaml`. Everything else, `okf` does better.
 ## Installation
 
 Published to the private incubator marketplace
-[`jrjsmrtn-private-skills`](https://github.com/jrjsmrtn/jrjsmrtn-private-skills).
+[`jrjsmrtn-skills`](https://github.com/jrjsmrtn/jrjsmrtn-skills).
 
 ```
-/plugin marketplace add jrjsmrtn/jrjsmrtn-private-skills
-/plugin install okf-skills@jrjsmrtn-private-skills
+/plugin marketplace add jrjsmrtn/jrjsmrtn-skills
+/plugin install okf-skills@jrjsmrtn-skills
 ```
 
 ## Status

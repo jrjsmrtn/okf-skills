@@ -12,6 +12,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-08-05
+
+**Graduated to the public marketplace** `jrjsmrtn-skills`, per `skills-workspace` ADR-0005's
+incubator→public path and ADR-0012 **as amended 2026-08-05**.
+
+### Changed
+
+- Installation now via the public marketplace; README and CLAUDE.md repointed from
+  `jrjsmrtn-private-skills`
+- Added `LICENSE` (MIT), `SECURITY.md`, `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`, matching the
+  other public format plugins
+
+### Notes
+
+ADR-0012's original trigger required testing in a subject domain **unrelated to supply chain**,
+naming a pattern-language bundle that does not yet exist. The amendment widens it to **subject
+domain *or* bundle shape**, because a different axis delivered the test first: `ai-contribution-policies`
+is **entity-keyed** where both existing corpora are concept-keyed, and three of 0.1.3's four
+additions were invisible until a bundle stopped being concept-keyed. `supplychain-workspace`
+ADR-0011 predicted exactly this at charter time.
+
+**The residual risk is stated rather than resolved**: subject diversity is still one domain plus one
+adjacent corpus. The tier tables and type vocabulary remain **worked examples, not defaults** — which
+matters more now the plugin is public.
+
 ## [0.1.3] - 2026-08-05
 
 Four additions, each from a failure or discovery while authoring a second OKF bundle and extending

@@ -8,7 +8,7 @@ description: >
   its place, and stamp the release. Use when concepts are approaching `stale_after`,
   after a scheduled gate reports expiry, or before cutting a bundle release.
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
 license: MIT
 ---
 
