@@ -168,6 +168,61 @@ This is the sharpest form of the corpus's central risk. A concept whose claim is
 visibly stale; a concept whose *quotation* is an OCR artefact reads as perfectly sourced and is
 wrong in the one place the format promises accuracy.
 
+### Check every quotation mechanically, and keep the marks for a source
+
+The section above is the sharpest case; the general one is that **a quotation is the only part of a
+concept that cannot be judged by reading it.** A stale claim looks stale. A misquotation looks
+perfect, in every reading, forever.
+
+So check them by machine. Download the source, extract every quoted span from the concept, and test
+each as a substring:
+
+```bash
+# every quoted span must appear verbatim in ONE OF the concept's sources
+python3 - <<'CHECK'
+import re, pathlib, glob
+srcs = [re.sub(r'\s+', ' ', pathlib.Path(f).read_text(errors='replace'))
+        for f in glob.glob('sources/*')]          # ALL of them, not one
+doc = re.sub(r'^> ?', '', pathlib.Path('concept.md').read_text(), flags=re.M)   # blockquote markers
+for q in re.findall(r'\*"(.+?)"\*', re.sub(r'\s+', ' ', doc)):
+    q = q.strip().rstrip('.')
+    print(('ok   ' if any(q in s for s in srcs) else '** UNMATCHED ** ') + q[:70])
+CHECK
+```
+
+**Check against the union of the concept's sources, not one file.** A concept citing three documents
+will report two-thirds of its quotations as faults if the check sees only the first — which is what
+happened the first time this snippet was run, and is the same class of error as the normalisation
+list below: the check was wrong, not the text.
+
+**Normalise the format before judging the text**, or the check reports faults that are not there.
+Every one of these produced a false negative in practice:
+
+| Normalise | Or you get |
+|---|---|
+| RFC page furniture (`… Standards Track [Page 4]`) | a sentence split by pagination |
+| hyphenation across a line break (`multi-\ndomain`) | a word the source "does not contain" |
+| markdown blockquote markers | `resources but do not define > standard methods` |
+| emphasis inside the quoted span | a mismatch on `**bold**` the reader never sees |
+| rendered vs raw link text | a quote that matches what a reader sees, not the file |
+
+The last one is a **real** fault, not a false negative: if the quoted span crosses a markdown link,
+the source contains markup the quotation silently dropped. Trim the quote to the verbatim run.
+
+**The trap specific to this skill: a re-verification note invites quoting your own claim.** You are
+writing about a sentence you just revised, and the natural way to refer to it is in quotation marks —
+which, in a document where those marks mean *the source wrote this*, silently promotes your own
+wording to sourced. Observed three times in one day's work, every one caught by the check above and
+**none by reading the file**.
+
+**Reserve the quotation styling for a source's words.** Use plain emphasis for your own, including
+when quoting an earlier version of the same concept.
+
+One process note worth more than the check: **draft from the downloaded source, not from a summary of
+it.** A tranche written from fetch summaries needed four quotation repairs; the next tranche,
+written from local copies, needed one — a straight apostrophe where the source had a typographic one.
+Paraphrase enters at the point of summarising, and no amount of care at writing time removes it.
+
 ### When one source publishes two versions
 
 A specification, policy or standard often exists as HTML *and* PDF, or as a rendered page *and* a
