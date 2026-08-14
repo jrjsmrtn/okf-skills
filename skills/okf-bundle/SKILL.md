@@ -6,7 +6,7 @@ description: >
   Scaffold or restructure an Open Knowledge Format bundle — the directory layout, the reserved files and their constraints, link conventions, versioning, and gate wiring. Use when creating a new OKF bundle, extracting one from a parent repository, or auditing an existing bundle's structure.
 
 metadata:
-  version: "0.1.6"
+  version: "0.1.7"
 license: MIT
 ---
 

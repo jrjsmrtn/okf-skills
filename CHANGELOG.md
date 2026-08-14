@@ -12,6 +12,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-08-14
+
+Two gaps found by auditing three bundles built in one week against what these skills already said.
+Both were absent rather than wrong.
+
+### Added
+
+- **`okf-bundle` now covers the type vocabulary**, which the skill had not mentioned at all. OKF
+  requires `type` and **constrains no value**: `type: Bananas` passes `okf validate` and `okf lint`
+  with zero errors, zero warnings and zero findings — run against a throwaway bundle rather than
+  taken from a note, and confirmed live by removing the field, which fails. So the vocabulary is a
+  convention and nothing enforces it by default
+  - The section is about checking it in **both directions**. Used-but-undeclared catches a typo;
+    declared-but-unused catches drift, and the second is the one usually skipped
+  - It covers the case a one-directional check cannot see: **a type stranded when its only concept
+    moves to another bundle**. The same check fires on the receiving bundle, which must declare the
+    arriving type first
+  - And the rule that follows: **do not declare a type before a concept uses it**, because a new type
+    should be a decision rather than a side effect
+- **`okf-verify` now names the outcome between verified and unchecked** — a source that loads, is the
+  right document, and does not support the claim. The existing section covers a source you cannot
+  read; this one is more dangerous because everything succeeds
+  - Absent `verified` conflates **never checked** with **checked and unsupported**, and only the
+    second tells the next person not to repeat the lookup
+  - Three routes out, in order: a different *kind* of source, a demonstration reproducible against a
+    named tool and version, or demoting the claim in place and leaving it visible
+  - Carries the heuristic that produced it: **project documentation describes purpose, not failure
+    modes.** A tool's own page states what a mechanism is for and is nearly silent on what goes wrong
+    with it — including the failure most discussed in practice. A tool's documentation is evidence
+    about its documentation
+  - States that **removing a citation is a legitimate outcome**. A source retained because it looks
+    supporting is worse than none, being the one a reader checks least
+
+### Notes
+
+**Three of today's errors were already documented here and happened anyway** — citing a URL that
+404s, citing a landing page that supports nothing, and putting emphasis inside a quotation. All three
+are in `okf-verify` already. The content was not the gap; reaching for it was. Worth knowing before
+assuming that more guidance prevents more mistakes.
+
+**Deliberately excluded**: the checker names and hook wiring used to enforce these rules. This plugin
+ships no gate scripts, and naming them would imply tooling it does not carry.
+
 ## [0.1.6] - 2026-08-05
 
 ### Fixed
