@@ -87,6 +87,36 @@ It fails plausibly rather than loudly, which is why it survived. When scaffoldin
 the headings by hand — there are six of them, once — or capitalise in the shell (`${name^}`, bash 4+)
 rather than reaching for a `sed` escape whose availability varies by platform.
 
+## An index that summarises the corpus is a second copy of it
+
+The section above says no gate reads an `index.md` heading. The same gap runs deeper: **no gate
+compares an index's claims to the corpus it indexes.** An index that only links onward cannot drift.
+One that also *characterises* the collection — how many concepts, how many verified, what state the
+whole is in — holds a second copy of facts that live in the concept files, and nothing will ever tell
+you the two disagree.
+
+Three observed failures, in escalating subtlety:
+
+- **A count outlived the corpus.** An index read *"seven of the eight concepts are verified"* when
+  there were nine and eight. A concept had been added and the sentence had not.
+- **A count corrected to a named exception, falsified by the same commit.** The fix was *"every
+  concept but one is verified"* — sound, because an exception does not go stale the way a count does.
+  It was wrong on arrival: the commit that wrote it also added a second unverified file. **A named
+  exception is robust against later change and not against the change introducing it.**
+- **A summary survived two releases after ceasing to be true.** An index said *"Nothing here is
+  verified"* through a verification pass and two tagged releases. The pass updated the concepts and
+  left the index alone, which is the ordinary shape of this failure: the index is not what you are
+  editing when the facts change.
+
+**Prefer describing the kind of evidence over quantifying it.** *"One concept is measured against
+running software; the rest rest on specification text"* stays true when a concept is added, because
+it describes a distribution rather than a tally. If a number really is the point, put it where it is
+derived — a command in the prose that the reader can run — rather than in a sentence that has to be
+maintained.
+
+**The moment to re-read the index is the moment you finish changing concepts**, which is exactly when
+attention has moved on. `okf-verify` puts it in the release step for that reason.
+
 ## Declare the type vocabulary, and check it both ways
 
 **OKF requires `type` and constrains no value.** Setting `type: Bananas` on a concept passes both

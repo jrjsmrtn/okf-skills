@@ -258,7 +258,15 @@ twice is telling you it was not worth the file.
 1. Entries accumulated under the newest ISO date heading in `knowledge/log.md`
 2. Add the release to the **preamble release map** — `**v0.6.0** 2026-08-14 · **v0.5.0** …`
 3. Mirror it in `CHANGELOG.md`
-4. Tag
+4. **Re-read `index.md` and any `landscape.md`** against what actually changed
+5. Tag
+
+**Step 4 exists because a verification pass is precisely when a summary goes stale.** You edit
+concepts; the index describes concepts; nothing links the two. An index has been observed carrying
+*"Nothing here is verified"* through two tagged releases after a pass verified three of its concepts,
+and a `landscape.md` describing a concept as *"the concept that failed its verification"* after that
+concept had been verified. Neither is detectable by any gate — see `okf-bundle` for why an index that
+characterises a corpus holds a second copy of it.
 
 **Do not rename a heading to the release.** `## v0.6.0 — 2026-08-14` violates OKF §9, which requires
 date headings in ISO 8601 `YYYY-MM-DD` form. The log is date-grouped by design; the release map in
