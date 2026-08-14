@@ -12,6 +12,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-08-14
+
+**One rule, from four instances of the same failure in a single week.** Every example below is
+something that happened, not a hazard imagined for the guidance.
+
+### Added
+
+- **`okf-bundle`: an index that summarises the corpus is a second copy of it.** The skill already
+  said no gate reads an `index.md` heading; this is the same gap deeper. **No gate compares an
+  index's claims to the corpus it indexes.** An index that only links onward cannot drift; one that
+  characterises the collection — how many concepts, how many verified, what state the whole is in —
+  holds facts that live in the concept files
+  - **A count outlived the corpus**: an index read *"seven of the eight concepts are verified"* when
+    there were nine and eight
+  - **A count corrected to a named exception, falsified by the same commit.** *"Every concept but one
+    is verified"* is the right instinct — an exception does not go stale the way a count does — and it
+    was wrong on arrival, because the commit that wrote it added a second unverified file. **A named
+    exception is robust against later change and not against the change introducing it**
+  - **A summary survived two tagged releases after ceasing to be true**, because a verification pass
+    edits concepts and the index is not what you are editing
+  - The guidance: **describe the kind of evidence rather than quantify it.** A distribution stays
+    true when a concept is added; a tally does not. If a number is genuinely the point, put it where
+    it is derived — a command the reader can run — not in a sentence someone must maintain
+- **`okf-verify`: re-read `index.md` and any `landscape.md` before tagging**, added as a step in the
+  release stamp. A verification pass is precisely when a summary goes stale, and both a stale index
+  and a `landscape.md` still calling a concept *"the concept that failed its verification"* were
+  observed at exactly that point
+
+### Notes
+
+The two skills cross-reference rather than repeat: `okf-verify` states the step and points at
+`okf-bundle` for why.
+
+**Deliberately excluded**, as in 0.1.7: the checker names and hook wiring that enforce this
+elsewhere. This plugin ships no gate scripts, and naming them would imply tooling it does not carry.
+
 ## [0.1.7] - 2026-08-14
 
 Two gaps found by auditing three bundles built in one week against what these skills already said.
