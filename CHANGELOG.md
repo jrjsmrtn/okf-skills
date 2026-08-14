@@ -12,6 +12,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.9] - 2026-08-15
+
+**A quotation is the only part of a concept that cannot be judged by reading it.** A stale claim
+looks stale; a misquotation looks perfect, in every reading, forever.
+
+### Added
+
+- **`okf-verify`: check every quotation mechanically, and keep the marks for a source.** The skill
+  already covered OCR artefacts as the sharpest case; this is the general one, with the check itself
+  and — more useful — **the normalisation that must happen before the check can judge anything**:
+  - RFC page furniture, hyphenation across a line break, blockquote markers and emphasis inside the
+    quoted span all produce **false negatives**. Every one was observed
+  - **Rendered versus raw link text is a real fault**, not a false negative: a quotation crossing a
+    markdown link silently drops markup the source contains. The section says which is which
+- **The trap specific to re-verification**: a note about a claim you just revised invites quoting
+  your own wording, which in a document where quote marks mean *the source wrote this* silently
+  promotes it to sourced. Observed three times in one day, every one caught by the mechanical check
+  and **none by reading the file**
+- **The process finding that outweighs the check**: draft from the downloaded source, not from a
+  summary. A tranche written from fetch summaries needed four quotation repairs; the next, written
+  from local copies, needed one — a straight apostrophe where the source had a typographic one
+
+### Notes
+
+The snippet in the section was corrected **after being run**: it checked a single source file, so a
+concept citing three reported two-thirds of its quotations as faults. That is the same class of error
+as the normalisation table one level up — the check was wrong, not the text — and it is recorded in
+the section rather than quietly fixed.
+
 ## [0.1.8] - 2026-08-14
 
 **One rule, from four instances of the same failure in a single week.** Every example below is

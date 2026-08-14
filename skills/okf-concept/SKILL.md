@@ -6,7 +6,7 @@ description: >
   Author or revise a single concept in an Open Knowledge Format bundle. Use when adding a concept to an OKF bundle, correcting one, deciding whether a subject earns a file at all, choosing its `stale_after`, or wiring per-claim attribution between footnotes and `sources`.
 
 metadata:
-  version: "0.1.8"
+  version: "0.1.9"
 license: MIT
 ---
 
