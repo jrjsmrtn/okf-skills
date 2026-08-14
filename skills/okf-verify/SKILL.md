@@ -107,6 +107,47 @@ code distinguishes neither retrieval nor existence, and *"source located, retrie
 URLs were simply wrong. **Confirm a URL from a page that actually resolves before recording a source
 as unreachable.**
 
+### When the source loads and does not support the claim
+
+The previous section covers a source you cannot read. This one is more dangerous, because everything
+succeeds: the document arrives, it is the right document, and **it does not say what the concept says
+it says.**
+
+The pull is to treat opening the source as the verification. Resist it. A source that loads and
+supports nothing leaves the claim exactly where it was, and stamping `verified` because a fetch
+returned 200 converts *unchecked* into *checked* without changing what is known.
+
+**Record "checked and unsupported" as its own outcome.** Absent `verified` conflates two very
+different states:
+
+| State | What it means | What it needs next |
+|---|---|---|
+| never checked | nobody has looked | someone looks |
+| **checked, unsupported** | someone looked; this source does not carry the claim | a *different* kind of evidence |
+
+Only the second tells the next person not to repeat the same lookup. Write it into the concept — what
+was read, which single sentence it did support, and what it was silent on.
+
+Three routes out, in the order worth trying:
+
+1. **A different source of the same kind** — a specification that states an obligation rather than a
+   description that states an intent.
+2. **A demonstration.** Where a claim is behavioural, the honest form is reproducible on demand
+   against a named tool and version, not a citation.
+3. **Demote the claim in place.** Mark it as reasoning rather than sourced fact and leave it visible.
+   A concept that says which of its sentences are load-bearing and which are inference is more useful
+   than one that hides the difference.
+
+**One heuristic, from doing this to three concepts at once.** Project documentation describes
+*purpose*, not failure modes. A tool's own page will tell you precisely what a mechanism is *for* and
+be nearly silent on what goes wrong with it — including the failure everyone actually discusses. One
+concept asserted a well-known failure mode and cited the vendor page for it; the page never mentions
+it. **A tool's documentation is evidence about its documentation.** Failure modes have to come from
+specifications, incident writeups, or measurement.
+
+Removing a citation is a legitimate outcome of this step. A source retained because it looks
+supporting, when it is not, is worse than no source: it is what a reader checks least.
+
 ### When the primary source is a scan
 
 A PDF with no text layer is not unreachable — it is unread. `pdftotext` and similar return **exit 0

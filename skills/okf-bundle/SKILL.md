@@ -87,6 +87,38 @@ It fails plausibly rather than loudly, which is why it survived. When scaffoldin
 the headings by hand — there are six of them, once — or capitalise in the shell (`${name^}`, bash 4+)
 rather than reaching for a `sed` escape whose availability varies by platform.
 
+## Declare the type vocabulary, and check it both ways
+
+**OKF requires `type` and constrains no value.** Setting `type: Bananas` on a concept passes both
+`okf validate` and `okf lint` with zero errors and zero warnings — run rather than assumed. So §4.1
+guarantees the field exists and guarantees nothing about what goes in it, and by default nothing
+stands between a deliberate new type and a typo.
+
+Declare the vocabulary in a plain list beside `knowledge/`, one type per line — **beside, not
+inside**, because it is a maintenance constraint rather than something a reader of a copied tree
+needs. Then check it in **both** directions:
+
+| Direction | What it catches |
+|---|---|
+| used but not declared | a typo, and any new type introduced without a decision |
+| declared but not used | drift — a vocabulary that outlived the concepts it described |
+
+The second direction is the one usually skipped and the one that pays. Two failures it catches:
+
+- **A type in use and undocumented.** A bundle ran four concepts on a type its own documentation
+  never listed, for a week. Nothing contradicted anything, because prose cannot contradict prose that
+  nobody reads it against. The type was legitimate and the list was stale — but the identical silence
+  would have hidden a misspelling, and a mistyped concept is invisible to every filter that selects
+  on type.
+- **A type stranded by a departing concept.** When a concept moves to another bundle, its type has to
+  leave with it if nothing else uses it. Checking both directions turns that from something you have
+  to remember into something the build refuses to skip — and it fires on the *receiving* bundle too,
+  which must declare the arriving type before the concept will pass.
+
+**Do not declare a type before a concept uses it.** A type reserved for a file you intend to write is
+drift by this rule, and the check will say so. Withhold it until the file exists; the ceremony of
+adding one line is the point, because a new type is a decision rather than a side effect.
+
 ## Scope before content
 
 Write the admission test before the first concept, and write it somewhere that is not the bundle.
