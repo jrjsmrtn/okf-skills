@@ -12,6 +12,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.10] - 2026-08-18
+
+**A record of what you could not retrieve ages like any other claim, and nothing in this skill said
+so.** The previous release taught the cycle to distrust a source that loads and does not support the
+claim. This one teaches it to distrust its own blocked list.
+
+Found by re-testing three standards a bundle had carried as *in scope and unsourced*. All three
+retrieved on the first attempt — one with a bare `curl` against the exact URL recorded as blocked.
+The classification had become a fact because it was written down, and writing it down was the last
+time anyone had looked.
+
+### Added — all in `okf-verify`, under *When the primary source will not load*
+
+- **A blocked finding is a measurement with a date, and it decays.** Re-test the blocked list every
+  cycle. Record a block as an observation with its date and method (*"returned a challenge page on
+  2026-08-14 via curl"*) rather than as a property of the document (*"is served only to browsers"*),
+  because the second reads as settled. And when a re-test succeeds, **say you cannot tell why** —
+  whether the finding was wrong or the world changed is usually unrecoverable, and picking the
+  flattering answer is how a corpus loses the ability to correct itself.
+- **When the standards-body edition is a stub, look for the original submission.** A specification
+  that became a standard usually has an earlier, freely readable form. One document was recorded
+  unsourceable on the strength of a seven-page table of contents served under the body's title, while
+  that same body mirrored the full original submission under a different path.
+- **Four kinds of unavailability, two of which are not the verifier's to resolve** — sold,
+  bot-blocked, registration-walled, encumbered. The last two turn on terms that are frequently
+  invisible until you have agreed to something, so **do not register an account, accept terms, or
+  agree to a licence on the bundle owner's behalf.** They are recorded as *blocked pending a human
+  decision*, a different status from *unsourced*: the missing ingredient is not effort.
+
+### Not added, deliberately
+
+Two candidate lessons from the same pass were already covered, and are not restated: checking
+quotations against **the union** of a concept's sources rather than one file, and recognising a
+landing page or an SPA shell as *the wrong representation*. Both were rediscovered the hard way,
+which is evidence the existing text is right and went unread — not a reason to write it twice.
+
 ## [0.1.9] - 2026-08-15
 
 **A quotation is the only part of a concept that cannot be judged by reading it.** A stale claim

@@ -6,7 +6,7 @@ description: >
   Run the re-verification cycle over an OKF bundle — triage by expiry, re-check claims against upstream, run a version-currency sweep, prune what no longer earns its place, and stamp the release. Use when concepts are approaching `stale_after`, after a scheduled gate reports expiry, or before cutting a bundle release.
 
 metadata:
-  version: "0.1.9"
+  version: "0.1.10"
 license: MIT
 ---
 
@@ -106,6 +106,62 @@ code distinguishes neither retrieval nor existence, and *"source located, retrie
 *"the URL is wrong"* look identical. Two sources were once logged as blocked on that reasoning; both
 URLs were simply wrong. **Confirm a URL from a page that actually resolves before recording a source
 as unreachable.**
+
+#### A blocked finding is a measurement with a date, and it decays
+
+Everything above treats unreachability as something you discover. It is also something you **record**
+— and the record ages exactly like the claims the rest of this skill exists to re-check.
+
+**Re-test the blocked list on every verification cycle.** Not once, and not only when someone asks.
+Hosts change, mirrors appear, a paywall lifts, a challenge is retired — or the original finding was
+wrong and nothing has re-examined it since.
+
+Measured: a bundle carried three standards as *in scope and unsourced*. On re-test, **all three
+retrieved on the first attempt** — one with a bare `curl` against the very URL recorded as blocked.
+The classification had hardened into a fact because it was written down, and writing it down was the
+last time anyone looked.
+
+Two consequences for how a block is recorded:
+
+- **State it as an observation with its date and its method**, not as a property of the document.
+  *"Returned a challenge page on 2026-08-14 via curl"* invites a re-test; *"is served only to
+  browsers"* reads as settled.
+- **When a re-test succeeds, say you cannot tell why.** Whether the earlier finding was wrong or the
+  world changed is usually unrecoverable, and choosing the flattering answer is how a corpus loses
+  the ability to correct itself.
+
+#### When the standards-body edition is a stub, look for the original submission
+
+A specification that *became* a standard usually has an earlier, freely readable form — an RFC, a
+working draft, a vendor submission — and the body's own edition may be the one you cannot get.
+
+The trap is that the authoritative-looking URL resolves and returns something, so it reads as
+retrieved. One document was recorded unsourceable on the strength of a seven-page **table of
+contents** served under the standards body's title; the full original submission was mirrored openly
+by that same body, under a different path.
+
+Before recording a specification as unavailable, ask **who published it first** — the successor
+edition is not always the readable one.
+
+#### Four kinds of unavailability, and two are not yours to resolve
+
+They are not interchangeable, and collapsing them into *"could not get it"* hides the ones that need
+someone else to act:
+
+| Kind | Looks like | Who resolves it |
+|---|---|---|
+| **Sold** | a purchase page | a budget decision |
+| **Bot-blocked** | a challenge page, HTTP 200 | a tooling problem — and the kind most likely to decay |
+| **Registration-walled** | free of charge, download disabled pending an account | **a person** — the terms are visible only after registering |
+| **Encumbered** | non-disclosure terms inside the document itself | **a person**, and it is a legal question |
+
+**Do not register an account, accept terms, or agree to a licence on the bundle owner's behalf.** For
+the last two rows the redistribution terms are often not visible until after you have agreed to
+something — so whether the text may be quoted under the bundle's licence is itself unknown, and
+settling that by proceeding is the wrong order.
+
+Record those as **blocked pending a human decision**, which is a different status from *unsourced*:
+the missing ingredient is not effort, and no amount of retrying changes it.
 
 ### When the source loads and does not support the claim
 

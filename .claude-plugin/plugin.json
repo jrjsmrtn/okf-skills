@@ -1,6 +1,6 @@
 {
   "name": "okf-skills",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Skills for authoring and maintaining Open Knowledge Format bundles \u2014 scaffold a conformant bundle, write a concept whose claims are attributable, and run the re-verification cycle that keeps them true.",
   "repository": "https://github.com/jrjsmrtn/okf-skills",
   "author": {
