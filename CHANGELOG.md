@@ -12,6 +12,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.11] - 2026-08-20
+
+**Four faults from a corpus-wide verification pass that these skills did not already cover** — and
+the notable thing is how few there were. The pass rebuilt a quotation checker from scratch and hit a
+bug `okf-verify` had already documented, because the plugin was not surfacing. **Most of what that
+pass "discovered" was already here.**
+
+### Added
+
+- **`okf-verify`: mistrims run in one direction, and that is the diagnostic.** Across one corpus,
+  every mistrimmed quotation ended where the surrounding *argument* wanted the sentence to end. It is
+  not transcription noise but the argument leaking into the evidence — which is why re-reading never
+  catches it and the writer is the last person able to.
+- **`okf-verify`: do not quote a figure from a page that recomputes.** One statistics page
+  recalculated every payday *and* rendered amounts in the viewer's currency; the same payday read
+  twice gave two different numbers. Report with a read-on date instead.
+- **`okf-concept`: three anti-patterns** — a number in prose that a gate already counts; a
+  verification note that outlives its evidence; and a comparison table captioned only at the foot of
+  the page, when tables are the most quotable and least sourced thing in a concept.
+- **`okf-bundle`: if the sources cannot be followed, the index must say so.** A bundle whose
+  citations point at reserved documentation hosts is unverifiable by construction. That is a
+  legitimate trade for anonymised material and it is invisible from inside the bundle — a reader sees
+  citations throughout and never learns that following one is impossible.
+
+### Notes
+
+- Deliberately **not** added: guidance to check quotations mechanically, to draft from the downloaded
+  source rather than a summary, and to avoid quoting your own claim in a re-verification note. All
+  three are already here, with better evidence than the pass produced. Restating them would lengthen
+  the skills without making them more likely to be read.
+
+
 ## [0.1.10] - 2026-08-18
 
 **A record of what you could not retrieve ages like any other claim, and nothing in this skill said

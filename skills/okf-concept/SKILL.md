@@ -233,6 +233,15 @@ renders as **nothing**, so a source that reads as cited in the file is absent fr
 - **Bundle-relative links across bundles.** A leading `/` means *this* bundle's root and does not
   cross a bundle boundary, even when two bundles sit side by side on disk. Cite the other bundle in
   prose instead.
+- **A number in prose that a gate already counts.** *"All fifteen quotations were checked"* goes
+  false the moment a sixteenth is added, and nothing will tell you. Describe the act, not the
+  arithmetic: *every quotation is checked on each commit*.
+- **A verification note that outlives its evidence.** A note saying *nothing here establishes X* is a
+  claim about the state of the sources, and it rots exactly like a claim about the world. When a pass
+  adds X, the note is now false — correct it in the same commit, and say what it replaced.
+- **A comparison table captioned only at the foot of the page.** Tables are the most quotable and
+  least sourced thing in a concept. If a table is reasoning rather than findings, **say so directly
+  above it**: a caveat in the verification note does not travel with the table when someone quotes it.
 - **Treating the gate's silence as correctness.** Gates verify structure, not sense. Links resolving
   and YAML parsing says nothing about whether a sentence contradicts the paragraph above it.
 

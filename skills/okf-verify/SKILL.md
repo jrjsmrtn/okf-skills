@@ -274,6 +274,21 @@ wording to sourced. Observed three times in one day's work, every one caught by 
 **Reserve the quotation styling for a source's words.** Use plain emphasis for your own, including
 when quoting an earlier version of the same concept.
 
+**Mistrims run in one direction, and that is the diagnostic.** Across one corpus, every mistrimmed
+quotation but none of the false negatives shared a property: the quotation ended where the
+surrounding *argument* wanted the sentence to end. A terminal period supplied before the source's
+`[RFC6020]`; a stop before *"and tell us about it"*; a clause cut before the sentence turned. **This
+is not transcription noise — it is the argument leaking into the evidence**, which is why re-reading
+does not catch it and why the writer is the last person able to. If a check reports a mistrim, look
+for what the full sentence would have cost the paragraph.
+
+**Do not quote a figure from a page that recomputes.** Some sources render per-viewer or per-week:
+one platform's statistics page recomputed every payday *and* rendered amounts in the viewer's
+currency, so the same payday read twice gave `$26,249.32` and `22.486,21 €`. A quotation of either
+is true in one locale for one week. **Report such figures with a read-on date instead of quoting
+them**, and say in the concept that the source recomputes — the reader needs to know the number has
+a shelf life, not just a source.
+
 One process note worth more than the check: **draft from the downloaded source, not from a summary of
 it.** A tranche written from fetch summaries needed four quotation repairs; the next tranche,
 written from local copies, needed one — a straight apostrophe where the source had a typographic one.

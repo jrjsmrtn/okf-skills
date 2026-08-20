@@ -117,6 +117,29 @@ maintained.
 **The moment to re-read the index is the moment you finish changing concepts**, which is exactly when
 attention has moved on. `okf-verify` puts it in the release step for that reason.
 
+## If the sources cannot be followed, the index must say so
+
+A bundle sometimes cannot cite anything a reader can open. The material came from private
+repositories, or a client engagement, or internal incidents, and the sources were anonymised — often
+to reserved documentation hosts under RFC 2606 — so the bundle could be distributed at all.
+
+**That is a legitimate trade and it is invisible from inside the bundle.** Every concept still shows
+a citation on every claim. A reader can work through a dozen of them, see sourcing throughout, and
+never learn that following any of it is impossible.
+
+**Say it in the index, in the reader's terms**, not in a note at the end of one concept and not only
+in the tooling's output. Three things are worth stating plainly:
+
+- **how much of the corpus it affects** — a proportion, since *some sources are anonymised* reads as
+  a footnote when the real figure is most of them
+- **what the citations still do** — they record *that* a claim came from practice, which is worth
+  something, without letting anyone check which practice
+- **what to do instead** — test the claim against your own work, because there is no link to follow
+
+The tooling will report it too: a quotation checker that finds nothing to check is telling you the
+same thing. **Tooling output is not where a reader meets a bundle**, and a count of *unverifiable*
+in a build log has never persuaded anyone of anything.
+
 ## Declare the type vocabulary, and check it both ways
 
 **OKF requires `type` and constrains no value.** Setting `type: Bananas` on a concept passes both
