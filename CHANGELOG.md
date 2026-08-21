@@ -12,6 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.12] - 2026-08-21
+
+**A release bumped `plugin.json` and left all three skills declaring the previous version.** `0.1.11`
+shipped with `metadata.version: "0.1.10"` in `okf-bundle`, `okf-concept` and `okf-verify`, and the
+`v0.1.11` tag records that tree. No skill content changed here; this release exists so a published
+artifact does not contradict itself about its own version.
+
+The lockstep is checked by `check-plugin-consistency.py` in the meta-project, which runs on that
+repository's commits and not on this one — `lefthook.yml`'s own `plugin-validate` does not catch it,
+as its comment has said since 2026-07-16. So a version bump made here is unguarded until the next
+workspace commit.
+
+### Fixed
+
+- **`metadata.version` in all three skills now matches `plugin.json`.**
+
 ## [0.1.11] - 2026-08-20
 
 **Four faults from a corpus-wide verification pass that these skills did not already cover** — and
@@ -363,7 +379,13 @@ being edited in lockstep. Extraction was prompted by editing both, identically, 
   negative-tested against a deliberately broken fixture — per ADR-0009, a control that has not been
   run is a claim, not a control.
 
-[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.12...HEAD
+[0.1.12]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.11...v0.1.12
+[0.1.11]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.10...v0.1.11
+[0.1.10]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.9...v0.1.10
+[0.1.9]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.8...v0.1.9
+[0.1.8]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.7...v0.1.8
+[0.1.7]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/jrjsmrtn/okf-skills/compare/v0.1.3...v0.1.4
