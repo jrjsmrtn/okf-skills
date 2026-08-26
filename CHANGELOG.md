@@ -12,6 +12,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.13] - 2026-08-26
+
+**A corpus audit found nineteen false or superseded summary claims, and the guidance named one file
+of six.** These changes carry the general half of that back into the skills. The corpus is not named
+here; the measurements are what travel.
+
+### Changed
+
+- **`okf-bundle` — *An index that summarises the corpus is a second copy of it*.** Its three observed
+  failures were all tallies, and a reader would search for numbers. **Most of the nineteen were not
+  counts** — they were claims a concept had already corrected in its own body, one of which opened
+  line 4 with an assertion its own line 67 called wrong.
+
+  **Two subsections added.** The first names **six kinds of file that hold a summary**, of which
+  `index.md` is one, and adds the diagnostic that **nineteen of nineteen** shared: *when a concept
+  records that it was wrong about something, search the corpus for the thing it was wrong about.*
+  It also records that **a count and its list are two places**, and that **`verified` drifts the same
+  way while `okf` checks only the timestamp's form.**
+
+  The second, ***Do not build a gate for this***, carries the two mechanisms measured and refused:
+  a description-versus-body checker, which cannot separate a claim that rots from one true forever by
+  method; and a count-detector, measured at **249 occurrences of a number word before an enumerable
+  noun** in one corpus, almost none of them claims about the corpus.
+
+- **`okf-verify` — the release step.** Step 4 said *re-read `index.md` and any `landscape.md`*. **It
+  now names all six**, because a corpus whose conventions said *re-read the index* accumulated
+  nineteen faults before anyone read the rest. **A read-straight-through explanation's body is listed
+  separately from its `description:`** — in that audit the body carried five faults and the
+  description one.
+
+- **`okf-concept` — a new subsection under *Editing concepts safely*.** **A concept's `description:`
+  is the summary closest to the body and the least likely to be re-read**, and **five of fifty**
+  asserted something their own body denied.
+
+  It records that **a date gap is a signal and not a verdict** — 26 of 50 had bodies changed after
+  their description and five were false — and that **the first measurement of that gap was a broken
+  checker reporting 0 of 50**, caught only by running it against a file known to have drifted. **A
+  clean result from an unproven check is not a clean result.** It also carries the colon-space trap,
+  which recurs most while *rewriting* a description.
+
+### Corrected
+
+- ⚠⚠⚠ **`0.1.12`'s entry concludes something the same commit had just made false.** It says the
+  version lockstep is checked in the meta-project, that `plugin-validate` does not catch it, and
+  therefore that *a version bump made here is unguarded until the next workspace commit*.
+
+  **Both premises are true. The conclusion is not.** Commit `28abb84`, which wrote that paragraph,
+  **also added a `version-lockstep` hook to `lefthook.yml`** — it ran on this release and reported
+  *0.1.13 across 3 skills*.
+
+  ⚠⚠ **This release repeated the claim before checking it**, and caught it only because the hook
+  printed. **A conclusion drawn from true premises is still a claim**, and the change that introduces
+  a fix is exactly the change most likely to leave a note saying the fix is absent — **the shape
+  `okf-bundle` already records for a named exception, met here at the tooling level.**
+
+  ⚠ **`0.1.12`'s entry is left as written.** It is a dated record of what was believed that day, and
+  this entry is where the correction belongs.
+
+
 ## [0.1.12] - 2026-08-21
 
 **A release bumped `plugin.json` and left all three skills declaring the previous version.** `0.1.11`

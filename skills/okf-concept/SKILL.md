@@ -6,7 +6,7 @@ description: >
   Author or revise a single concept in an Open Knowledge Format bundle. Use when adding a concept to an OKF bundle, correcting one, deciding whether a subject earns a file at all, choosing its `stale_after`, or wiring per-claim attribution between footnotes and `sources`.
 
 metadata:
-  version: "0.1.12"
+  version: "0.1.13"
 license: MIT
 ---
 
@@ -275,6 +275,34 @@ text = text.replace(old, "stale_after: 2027-01-15", 1)
 
 `okf validate` and `okf lint` are the gate, not the editor. They catch a corrupted concept; they do
 not catch an edit that never happened.
+
+### The `description:` is a summary, and it goes stale first
+
+**A concept's own `description:` is the summary closest to the body and the least likely to be
+re-read.** It is written once, when the concept is created, and the body is then corrected around it
+for months.
+
+⚠⚠⚠ **Measured on one corpus, 2026-08-26: five of fifty descriptions asserted something the concept's
+own body denied.** The sharpest opened line 4 with *"neither European body lists it at all"* while
+**line 67 of the same file read *"This record said neither European body lists SUSI. That was
+wrong."*** Two more repeated a prediction the corpus's overview had struck through four days earlier.
+
+**Nothing detects this.** `okf lint` warns when `description` is absent and never reads it.
+
+- **When a correction lands in the body, re-read the description in the same edit.** The correction is
+  the trigger; a diff of the body is where you already are.
+- ⚠ **A date gap is a signal, not a verdict.** In that corpus **26 of 50** concepts had bodies changed
+  after their description, and **five** were actually false. Comparing the last commit touching a file
+  against the last commit changing its `description:` line finds the candidates cheaply; **reading
+  decides.**
+- ⚠⚠ **Prove that measurement can fail before trusting it.** The first attempt reported **0 of 50** —
+  a `git log -L` form that silently returned nothing for every file. Run it against a file you know
+  has drifted; **a clean result from an unproven check is not a clean result.**
+
+⚠ **And a colon-space ends a YAML scalar.** `description: A vehicle turned round: the lines swap`
+stops the file parsing, and `okf` reports it as a bundle-level I/O error with **no filename** while
+every downstream gate fails with it. Use an em dash, or quote the whole value. **It recurs most while
+*rewriting* a description**, where the frame already looks correct.
 
 ## Related Skills
 

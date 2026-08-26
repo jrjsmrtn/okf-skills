@@ -6,7 +6,7 @@ description: >
   Run the re-verification cycle over an OKF bundle — triage by expiry, re-check claims against upstream, run a version-currency sweep, prune what no longer earns its place, and stamp the release. Use when concepts are approaching `stale_after`, after a scheduled gate reports expiry, or before cutting a bundle release.
 
 metadata:
-  version: "0.1.12"
+  version: "0.1.13"
 license: MIT
 ---
 
@@ -384,15 +384,30 @@ twice is telling you it was not worth the file.
 1. Entries accumulated under the newest ISO date heading in `knowledge/log.md`
 2. Add the release to the **preamble release map** — `**v0.6.0** 2026-08-14 · **v0.5.0** …`
 3. Mirror it in `CHANGELOG.md`
-4. **Re-read `index.md` and any `landscape.md`** against what actually changed
+4. **Re-read every summary of what you changed** — the list is below
 5. Tag
 
 **Step 4 exists because a verification pass is precisely when a summary goes stale.** You edit
-concepts; the index describes concepts; nothing links the two. An index has been observed carrying
+concepts; the summaries describe concepts; nothing links the two. An index has been observed carrying
 *"Nothing here is verified"* through two tagged releases after a pass verified three of its concepts,
 and a `landscape.md` describing a concept as *"the concept that failed its verification"* after that
 concept had been verified. Neither is detectable by any gate — see `okf-bundle` for why an index that
 characterises a corpus holds a second copy of it.
+
+⚠⚠ **Naming two files is not enough, measured.** A corpus whose conventions said *re-read the index*
+accumulated **nineteen false or superseded summary claims** before anyone read the rest. **Re-read
+all six:**
+
+1. the concept's own **`description:`**
+2. its **subdirectory `index.md`** entry, and that file's prose
+3. the **bundle-root `index.md`**
+4. any **read-straight-through explanation** — **its body as well as its `description:`**
+5. a **chronology**, if the change touches a date
+6. any **declared-exception file**, if the change falsifies something declared in one
+
+⚠ **And the shortcut that finds the class quickly: when a concept records that it was wrong about
+something, search the corpus for the thing it was wrong about.** In that audit, nineteen of nineteen
+corrections had reached the body and stopped there.
 
 **Do not rename a heading to the release.** `## v0.6.0 — 2026-08-14` violates OKF §9, which requires
 date headings in ISO 8601 `YYYY-MM-DD` form. The log is date-grouped by design; the release map in

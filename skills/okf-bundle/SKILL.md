@@ -6,7 +6,7 @@ description: >
   Scaffold or restructure an Open Knowledge Format bundle — the directory layout, the reserved files and their constraints, link conventions, versioning, and gate wiring. Use when creating a new OKF bundle, extracting one from a parent repository, or auditing an existing bundle's structure.
 
 metadata:
-  version: "0.1.12"
+  version: "0.1.13"
 license: MIT
 ---
 
@@ -116,6 +116,57 @@ maintained.
 
 **The moment to re-read the index is the moment you finish changing concepts**, which is exactly when
 attention has moved on. `okf-verify` puts it in the release step for that reason.
+
+### The failure is not only counts, and not only `index.md`
+
+The three failures above are all tallies, and a reader who takes them as the pattern will search for
+numbers. **A corpus audited on 2026-08-26 found nineteen false or superseded summary claims, and most
+of them were not counts.** They were claims a concept had already corrected in its own body:
+
+> A concept's line 4 read *"neither European body lists it at all"*. **Line 67 of the same file
+> opened: *"This record said neither European body lists SUSI. That was wrong."*** The correction
+> reached the body and never the summary.
+
+**Six kinds of file hold a summary, and only one of them is `index.md`:**
+
+| | |
+|---|---|
+| a concept's **`description:`** | OKF §4.1 frontmatter, and the field most likely to be written once |
+| a **subdirectory `index.md`** entry, and that file's prose | |
+| the **bundle-root `index.md`** | where it characterises the corpus |
+| a **read-straight-through explanation** — **its body as well as its own `description:`** | in the audit above, the body carried five faults and the description one |
+| a **chronology or timeline**, if one exists | a copied event is still a copy |
+| any **declared-exception file** the bundle keeps beside `knowledge/` | a declaration outlives the claim it was made for |
+
+⚠ **The diagnostic, because nineteen of nineteen shared it: when a concept records that it was wrong
+about something, search the whole corpus for the thing it was wrong about.** Corrections travel to
+the body and stop. This is cheaper than re-reading everything and finds the class that matters.
+
+⚠ **A count and its list are two places.** A list of five items under a lead-in reading *four kinds*
+was produced by the very release auditing that corpus for summary drift — **the bullet was added and
+the lead-in was not.** Editing a list means editing its lead-in.
+
+⚠ **`verified` drifts the same way and `okf` does not check it.** OKF §5.2 constrains the timestamp's
+form, not whether it matches the last substantive edit. Two concepts in that audit were rewritten
+while their newest `verified.at` was three days old. **Add the entry in the same pass as the edit.**
+
+### Do not build a gate for this
+
+**Two mechanical checks were designed and measured before being refused**, and the measurements are
+worth having because the ideas are obvious:
+
+- **A description-versus-body checker** would need to know what a body *says*, not what it contains.
+  **No pattern separates a claim that rots from one that cannot**: *"no counterpart in the other
+  corpus"* is false the day a counterpart is read, and *"nothing here has been measured against
+  equipment"* is true forever by the bundle's method. Same grammar, opposite behaviour.
+- **A count-detector.** Measured on one corpus: **249 occurrences of a number word before an
+  enumerable noun, and 118 numbers in headings or descriptions.** Almost none were claims about the
+  corpus — they counted things inside a source document. **A declared exception list of 249 lines is
+  one nobody re-reads.**
+
+**Write down the occasion and the file list instead.** A rule that names one file of six will be
+followed and still miss five, which is what the audit found: the rule existed, and nineteen faults
+accumulated under it.
 
 ## If the sources cannot be followed, the index must say so
 
