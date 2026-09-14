@@ -6,7 +6,7 @@ description: >
   Run the re-verification cycle over an OKF bundle — triage by expiry, re-check claims against upstream, run a version-currency sweep, prune what no longer earns its place, and stamp the release. Use when concepts are approaching `stale_after`, after a scheduled gate reports expiry, or before cutting a bundle release.
 
 metadata:
-  version: "0.1.13"
+  version: "0.1.14"
 license: MIT
 ---
 
@@ -203,6 +203,114 @@ specifications, incident writeups, or measurement.
 
 Removing a citation is a legitimate outcome of this step. A source retained because it looks
 supporting, when it is not, is worse than no source: it is what a reader checks least.
+
+### When the source is a decision still being made
+
+An open pull request, a draft policy, a proposal awaiting a vote. The document loads and says what
+the concept says — **and the claim that matters is about its state**, which the document's text does
+not carry.
+
+**Read the whole state, not the headline.** *Open* and *merged* are the two values everyone checks
+and the least informative. Measured: a record verified a proposal as *"still open and unmerged"*;
+it was, and it had already carried **two approving reviews for over three weeks**, which the record
+never mentioned. For a pull request, read every one of:
+
+| Read | Because |
+|---|---|
+| reviews and their verdicts | an approved proposal is one merge from being in force |
+| the current diff, not the one first quoted | the text can change under the same number |
+| comments since the last verification | objections, counter-proposals, a replacement text |
+| commits | a force-push rewrites what was proposed |
+
+**Then watch the venue, because `stale_after` cannot.** Expiry is a date; a proposal moves on events.
+The same record, still inside its expiry window, had **thirteen comments** land after its last
+`verified` stamp — one proposing to replace the section the record was about. Nothing reported it.
+
+The check below asks the forge whether anything happened to a cited pull request since the concept
+was last verified. It reads GitHub pull request URLs from `sources[].resource`; set `GITHUB_TOKEN`
+for anything more than a handful of concepts.
+
+```bash
+python3 - knowledge/path/to/concept.md <<'PY'
+# Exit 1 if a cited pull request has a review, comment, commit, merge or close newer than the
+# latest `verified[].at`; exit 2 if the forge could not be read. Never let a failed fetch exit 1:
+# it would read as movement.
+import json, os, re, sys, urllib.error, urllib.request, yaml
+from datetime import datetime
+
+PR = re.compile(r'https://github\.com/([\w.-]+)/([\w.-]+)/pull/(\d+)')
+
+def api(path):
+    items, page = [], 1
+    while True:
+        req = urllib.request.Request(
+            f'https://api.github.com/{path}?per_page=100&page={page}',
+            headers={'Accept': 'application/vnd.github+json',
+                     **({'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'}
+                        if os.environ.get('GITHUB_TOKEN') else {})})
+        try:
+            data = json.load(urllib.request.urlopen(req, timeout=30))
+        except (urllib.error.URLError, OSError) as e:
+            print(f'ERROR cannot read {path}: {e} — nothing was checked', file=sys.stderr)
+            sys.exit(2)
+        if isinstance(data, dict):
+            return data
+        items += data
+        if len(data) < 100:
+            return items
+        page += 1
+
+def when(s):
+    return datetime.fromisoformat(str(s).replace('Z', '+00:00'))
+
+moved = False
+for path in sys.argv[1:]:
+    meta = yaml.safe_load(open(path).read().split('---')[1]) or {}
+    stamps = [when(v['at']) for v in meta.get('verified') or [] if v.get('at')]
+    since = max(stamps) if stamps else None
+    prs = sorted({m.groups() for s in meta.get('sources') or []
+                  for m in [PR.search(str(s.get('resource', '')))] if m})
+    if not prs:
+        print(f'-- {path}: cites no pull request, nothing to watch')
+        continue
+    for owner, repo, n in prs:
+        base = f'repos/{owner}/{repo}'
+        pull = api(f'{base}/pulls/{n}')
+        events = [('review', r['user']['login'], r['submitted_at']) for r in api(f'{base}/pulls/{n}/reviews') if r.get('submitted_at')]
+        events += [('comment', c['user']['login'], c['created_at']) for c in api(f'{base}/issues/{n}/comments')]
+        events += [('review comment', c['user']['login'], c['created_at']) for c in api(f'{base}/pulls/{n}/comments')]
+        events += [('commit', (c.get('author') or {}).get('login', '?'), c['commit']['committer']['date']) for c in api(f'{base}/pulls/{n}/commits')]
+        events += [(k, '', pull[f'{k}_at']) for k in ('merged', 'closed') if pull.get(f'{k}_at')]
+        state = 'merged' if pull.get('merged_at') else pull['state']
+        newer = sorted((e for e in events if since is None or when(e[2]) > since), key=lambda e: e[2])
+        if newer:
+            moved = True
+            print(f'MOVED {path}: {owner}/{repo}#{n} is {state}; {len(newer)} event(s) since '
+                  f'{since.isoformat() if since else "never verified"}')
+            for kind, who, at in newer:
+                print(f'    {at[:10]}  {kind:<14} {who}')
+        else:
+            print(f'ok    {path}: {owner}/{repo}#{n} is {state}; nothing since {since.isoformat()}')
+sys.exit(1 if moved else 0)
+PY
+```
+
+Run against the record above, it reported **13 events, exit 1**; against the same record re-verified,
+**exit 0**; against a concept citing no pull request, it said so and exited 0. **Its first draft
+exited 1 on a network failure** — an interpreter whose sockets were blocked produced a traceback that
+would have read as *moved*. Hence exit 2.
+
+**What it cannot see**, so do not let a pass stand in for the reading above:
+
+- **State that already existed when the concept was verified** and went unrecorded. The two
+  approvals predated the stamp; only reading finds them.
+- **When a commit was pushed.** It compares commit dates, which a rebase or force-push can leave
+  older than the push.
+- **An edited comment or description**, and anything outside GitHub — a mailing-list thread, a
+  meeting, a vote. Name those venues in the concept's re-verification notes instead.
+
+Wire it into the scheduled sweep, not the commit hook: it answers a question about the world, which a
+commit does not change.
 
 ### When the primary source is a scan
 
@@ -470,6 +578,8 @@ stale, not what is about to be.
   `verified` entry looks identical afterwards. Say the source was unreachable, or find another route.
 - **Treating a 200 as a fetch.** An empty body, a landing page or a metadata representation all
   return success. Check that what came back is the document.
+- **Verifying a proposal as "still open".** Open is the least of its state. Read the reviews, the
+  current diff and what was said since, and watch it between verifications.
 - **Correcting a claim without repointing its citers.** A reassigned label leaves every
   cross-reference quietly wrong.
 - **Letting the corpus only grow.** Without a deletion criterion, review becomes archiving.

@@ -33,9 +33,12 @@ structure and versioning.
   gates ever did, and it is maintained by people reading the spec. The skills add only the three
   residual checks it does not perform (both footnote-*definition* directions, and `verified` without
   `sources`). Do not reimplement conformance here.
-- **The local gate scripts.** They stay in `supplychain-workspace/workspace/scripts`. As of
-  2026-08-03 two of the three are superseded by `okf validate`; retiring them is tracked in that
-  workspace's ADR-0010, not here.
+- **The local gate scripts.** Not here, and this file does not say where they live today — it
+  said `supplychain-workspace/workspace/scripts` until 2026-09-14, a month after that stopped being
+  true. The events: two of the original three were superseded by `okf validate` on 2026-08-03;
+  `check-okf.py` was retired for `okf-gate` on 2026-08-10 (`supplychain-workspace` ADR-0010); and the
+  format-generic checkers moved up to the outer workspace meta-project's `workspace/scripts` on
+  2026-08-13, when `knowledge-workspace` was created. Ask the filesystem for the current set.
 - **RAG and retrieval.** OKF is a knowledge *format*; how a corpus is chunked, embedded and served is
   a different concern (see the `ragu-*` projects). See `Skills/CLAUDE.md` on Skills vs OKF vs RAG.
 - **Diátaxis.** An OKF concept is closest to Diátaxis reference/explanation, but the frameworks
@@ -71,4 +74,5 @@ structure and versioning.
 ## Remotes
 
 - origin: private git server
-- github: `jrjsmrtn/okf-skills` (private)
+- github: `jrjsmrtn/okf-skills` — published 2026-08-05; ask the forge for its visibility, since this
+  line said *private* for six weeks after it was not

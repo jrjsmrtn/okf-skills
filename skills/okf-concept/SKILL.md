@@ -6,7 +6,7 @@ description: >
   Author or revise a single concept in an Open Knowledge Format bundle. Use when adding a concept to an OKF bundle, correcting one, deciding whether a subject earns a file at all, choosing its `stale_after`, or wiring per-claim attribution between footnotes and `sources`.
 
 metadata:
-  version: "0.1.13"
+  version: "0.1.14"
 license: MIT
 ---
 
@@ -169,6 +169,12 @@ latest this will be reviewed at the start of 2027"* has told you when it may cha
 guess about the same question and a worse one. Set `stale_after` just after the named date and say in
 the re-verification notes that the source supplied it — otherwise the next reviewer reads an unusual
 value as a mistake and rounds it back to a tier.
+
+**A concept about a decision still being made needs a watch as well as a date.** An open pull
+request, a draft under discussion, a vote not yet held: the ~3 month tier fits, but expiry notices
+nothing that happens before it, and a proposal's state is exactly what moves. Say in the concept
+that nothing in it is in force, name the venue whose state decides that, and see `okf-verify` —
+*When the source is a decision still being made* — for what to read and the check that notices.
 
 Clustering *within* a tier is fine and intended — concepts that share a volatility class tend to
 share sources, so re-verifying them in one sitting is cheaper. Clustering *across* classes, because

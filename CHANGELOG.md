@@ -12,7 +12,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.14] - 2026-09-14
+
+**A record verified a proposal as "still open and unmerged", and missed everything else about it.**
+The proposal already carried two approving reviews, and thirteen comments landed after the record's
+last `verified` stamp while it sat inside its expiry window. No gate could have seen either.
+
+### Added
+
+- **`okf-verify` — *When the source is a decision still being made*.** What to read for a proposal's
+  state (reviews, the current diff, comments since, commits), and a check that asks the forge whether
+  a cited GitHub pull request moved since the concept was last verified. **Run three ways before
+  shipping**: the stale record reported 13 events and exit 1, the re-verified record exit 0, a concept
+  citing no pull request said so and exited 0. **Its first draft exited 1 on a network failure**, which
+  would have read as movement; a failed fetch now exits 2. The section states what the check cannot
+  see — unrecorded state that predated the stamp, push times, edits, venues outside GitHub — so a pass
+  is not taken for the reading. One anti-pattern added.
+- **`okf-concept` Step 5** — a concept about a pending decision needs a watch as well as a date, and
+  points to the section above.
+
 ### Fixed
+
+- **`CLAUDE.md` named a script location that had been wrong for a month**, and labelled the GitHub
+  remote *private* six weeks after publication. Both are now recorded as dated events rather than
+  current state.
 
 - **The `gitleaks` gate failed open.** When `gitleaks` was not on `PATH` the hook printed
   `secret scan SKIPPED` and exited 0, so a machine without it committed unscanned — and the scan a
