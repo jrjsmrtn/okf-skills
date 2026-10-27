@@ -12,6 +12,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.15] - 2026-10-27
+
+**The skills told readers `okf` does not check two things it now checks.** The coverage claims were
+pinned to `okf` v0.2.1 (2026-08-03); the installed tool is v0.5.0. The OKF spec revision did not move
+(`okf init` still writes `okf_version: "0.2"`) — the tool did. Re-measured against fixtures, one per
+fault plus a clean control that reports no findings.
+
+### Changed
+
+- **`okf-concept` — footnote cited-but-undefined and defined-but-uncited are no longer residual.**
+  `okf` reports both (`okf/sources/footnote-undefined`, `okf/sources/footnote-unreferenced`). The local
+  Python check is removed; Validation now points at `okf lint` and the rule IDs.
+- **`okf` reports these at WARN and exits 0**, so a gate that reads the exit code passes a concept whose
+  source silently vanished. Validation now says so and gives a findings filter, run against the
+  fixtures: silent on the clean control, firing on each planted fault.
+- README and CLAUDE.md repinned to v0.5.0 (2026-10-27); the residual list shrinks from three checks to
+  one.
+
+### Added
+
+- **`okf-concept` — the entry formats `okf` enforces.** `sources[]` needs `resource` (ERROR; `url` does
+  not substitute); `verified[]` needs `by` (`human:<id>`, `process:<id>` or `<producer>/<version>`) and
+  `at` (a full ISO 8601 datetime — a bare date warns). Each was found by a first fixture failing.
+- **`okf-verify`** states the `verified` entry format where the stamp is added.
+
+### Unchanged, re-measured
+
+- `verified` with no `sources` is still not checked by `okf`; the `okf-verify` script fails on the
+  fixture and passes the control.
+
+
 ## [0.1.14] - 2026-09-14
 
 **A record verified a proposal as "still open and unmerged", and missed everything else about it.**

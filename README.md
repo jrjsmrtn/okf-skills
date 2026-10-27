@@ -50,14 +50,13 @@ CLI — one static binary, JSON output, non-zero exit on error. It covers the sp
 a local script will: §5.1 footnote→`sources[].id`, §5.2 ISO datetimes, §5.5 expiry, §8 index
 frontmatter, §9 log headings, and link resolution.
 
-The skills add only what it does not check, measured against v0.2.1 on 2026-08-03:
+The skills add one check it does not make, measured against v0.5.0 on 2026-10-27:
 
-- a footnote **cited but never defined** — renders as a dangling marker
-- a footnote **defined but never cited** — renders as *nothing*, so a source that reads as cited is
-  absent from the output
 - `verified` present with no `sources` to have checked
 
-Those need `python3` and `pyyaml`. Everything else, `okf` does better.
+That needs `python3` and `pyyaml`. Footnotes **cited but never defined** and **defined but never cited**
+were on this list until `okf` v0.5.0 began reporting both — **at WARN, exit 0**, so a gate must read the
+findings rather than the exit code. Everything else, `okf` does better.
 
 ## Installation
 

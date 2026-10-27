@@ -30,9 +30,9 @@ structure and versioning.
 
 - **Conformance checking.** Delegated to [`okfcli/okf`](https://github.com/okfcli/okf), the
   vendor-neutral Go CLI. It covers §5.1/§5.2/§5.5/§8/§9 and links — more of the spec than the local
-  gates ever did, and it is maintained by people reading the spec. The skills add only the three
-  residual checks it does not perform (both footnote-*definition* directions, and `verified` without
-  `sources`). Do not reimplement conformance here.
+  gates ever did, and it is maintained by people reading the spec. The skills add only the one
+  residual check it does not perform: `verified` without `sources`. (Both footnote-*definition*
+  directions were residual until `okf` v0.5.0 began reporting them.) Do not reimplement conformance here.
 - **The local gate scripts.** Not here, and this file does not say where they live today — it
   said `supplychain-workspace/workspace/scripts` until 2026-09-14, a month after that stopped being
   true. The events: two of the original three were superseded by `okf validate` on 2026-08-03;
@@ -54,7 +54,7 @@ structure and versioning.
   is not ceremony: 0.1.0 shipped versioning guidance that violated OKF §9, and running `okf validate`
   is what caught it
 - **Claims about what `okf` does or does not check must be re-measured, not remembered.** The
-  coverage table in `okf-concept` is pinned to v0.2.1 (2026-08-03); upstream is active
+  coverage table in `okf-concept` is pinned to v0.5.0 (2026-10-27); upstream is active — it moved 0.2.1 → 0.5.0 in under three months and absorbed two of the three residual checks
 - Residual checks depend on `python3` + `pyyaml` and nothing else. No plugin-local scripts to install
 - Distinguish **spec** from **house convention** everywhere. OKF v0.2 requires parseable frontmatter
   and a non-empty `type`; almost everything else these skills recommend is a choice, and must be

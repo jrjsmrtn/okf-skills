@@ -6,7 +6,7 @@ description: >
   Run the re-verification cycle over an OKF bundle — triage by expiry, re-check claims against upstream, run a version-currency sweep, prune what no longer earns its place, and stamp the release. Use when concepts are approaching `stale_after`, after a scheduled gate reports expiry, or before cutting a bundle release.
 
 metadata:
-  version: "0.1.14"
+  version: "0.1.15"
 license: MIT
 ---
 
@@ -450,6 +450,9 @@ When a claim changes:
 - Repoint every concept that cited it. A taxonomy that reassigns its own labels silently invalidates
   every cross-reference by label.
 - Add the `verified` entry.
+
+A `verified` entry is `by` (`human:<id>`, `process:<id>` or `<producer>/<version>`), `at` (a full ISO 8601
+datetime — a bare date warns) and `sources`, naming the `sources[].id` values actually re-read.
 
 When a claim holds: add the `verified` entry, extend `stale_after` by its tier, and say so in the
 log. **A negative result is a result** — record it, dated, so the next cycle does not redo it blind.

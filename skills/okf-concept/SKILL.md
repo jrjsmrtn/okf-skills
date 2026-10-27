@@ -6,7 +6,7 @@ description: >
   Author or revise a single concept in an Open Knowledge Format bundle. Use when adding a concept to an OKF bundle, correcting one, deciding whether a subject earns a file at all, choosing its `stale_after`, or wiring per-claim attribution between footnotes and `sources`.
 
 metadata:
-  version: "0.1.14"
+  version: "0.1.15"
 license: MIT
 ---
 
@@ -46,7 +46,7 @@ conformance break gets waved through as taste.
 | `log.md` headings are ISO 8601 dates | **yes** — §9 | |
 | `title`, `description`, `resource`, `tags`, `status` | no — *recommended*; `okf lint` warns | used throughout |
 | `verified`, `stale_after`, `generated` | no — optional families | **load-bearing here** |
-| Every footnote *definition* is referenced | no | ours — nothing upstream checks it |
+| Every footnote *definition* is referenced, and every reference defined | no — upstream warns, `okf lint` | ours as a *rule*; `okf` reports it at WARN and exits 0 |
 | A `stale_after` tier table | no | ours |
 
 Everything in the right-hand column is a choice a bundle makes. Write it down in the bundle's own
@@ -137,10 +137,12 @@ Three failure modes, all invisible on rendered output:
 | Fault | What the reader sees | Caught by |
 |---|---|---|
 | Label is not a `sources[].id` | a citation that resolves to nothing | `okf lint` (§5.1) |
-| Label referenced, never defined | a dangling marker | the local check below |
-| Label defined, never referenced | **nothing at all** — the source silently vanishes | the local check below |
+| Label referenced, never defined | a dangling marker | `okf lint` (`okf/sources/footnote-undefined`) |
+| Label defined, never referenced | **nothing at all** — the source silently vanishes | `okf lint` (`okf/sources/footnote-unreferenced`) |
 
-The third is the quiet one. Run the checks in Validation rather than reading for them.
+The third is the quiet one. Run the checks in Validation rather than reading for them. **`okf` reports
+all three at WARN and exits 0**, so a gate that only looks at the exit code passes a concept with a
+vanished source — see `okf-gate`, or read the findings.
 
 **An uncited `sources[].id` is legitimate** and should not be flagged: a narrative concept carries a
 bibliography rather than per-claim attribution. Only the footnote→source direction is an error.
@@ -192,41 +194,30 @@ no `verified` entry. See `okf-verify`.
 ## Validation
 
 **First, `okf`.** The vendor-neutral CLI ([`okfcli/okf`](https://github.com/okfcli/okf)) covers the
-spec, including the footnote→`sources[].id` join, which §5.1 makes a conformance matter rather than a
-style one:
+spec, including the footnote→`sources[].id` join and both footnote-*definition* directions, which
+§5.1 makes a conformance matter rather than a style one (measured against v0.5.0, 2026-10-27):
 
 ```bash
 okf validate "$BUNDLE"   # §5.2 datetimes, §5.5 expiry, §8 index frontmatter, §9 log headings, links
-okf lint "$BUNDLE"       # recommended fields; footnote label -> sources[].id (§5.1)
+okf lint "$BUNDLE"       # the same findings, warnings only; footnote faults carry okf/sources/footnote-*
 ```
 
-**Then the two directions `okf` does not check** (measured against v0.2.1, 2026-08-03). Both concern
-footnote *definitions* rather than the sources join, and both are invisible on rendered output:
+**Findings carry a stable rule ID** (`okf/<family>/<check>`), and footnote faults and `stale` are WARN,
+so both commands exit 0 on them. Gate on the findings, not the exit code:
 
 ```bash
-python3 - path/to/concept.md <<'PY'
-import re, sys, yaml
-src = open(sys.argv[1]).read()
-_, fm, body = src.split('---', 2)
-refs = set(re.findall(r'\[\^([^\]]+)\](?!:)', body))
-defs = set(re.findall(r'^\[\^([^\]]+)\]:', body, re.M))
-fail = False
-for label, s in [("cited but never defined (renders as a dangling marker)", refs - defs),
-                 ("defined but never cited (renders as nothing at all)",    defs - refs)]:
-    if s:
-        print(f"FAIL {label}: {', '.join(sorted(s))}")
-        fail = True
-if not fail:
-    print(f"footnote definitions OK ({len(refs)} referenced, {len(defs)} defined)")
-sys.exit(1 if fail else 0)
-PY
+okf validate "$BUNDLE" | yq -p=json '.findings[] | select(.rule | test("footnote|lifecycle/stale$"))'
 ```
 
-Expected on a clean concept: `footnote definitions OK (N referenced, M defined)`, exit 0. Any `FAIL`
-exits 1, so it works unmodified as a hook or CI step.
+**Entry formats `okf` enforces** (measured 2026-10-27, and each one cost a failed first fixture):
+`sources[]` needs `resource` (ERROR — `url` does not substitute); `verified[]` needs `by` and `at`;
+`by` is `human:<id>`, `process:<id>` or `<producer>/<version>` (§7); `at` is a full ISO 8601
+datetime, so `2026-10-01` warns and `2026-10-01T00:00:00Z` does not.
 
-The second case is the quiet one and the reason this check exists: a definition nobody references
-renders as **nothing**, so a source that reads as cited in the file is absent from the output.
+**Then the one check `okf` does not make** (measured against v0.5.0, 2026-10-27): `verified` with no
+`sources` to have checked. A concept carrying a complete `verified` entry and no `sources` produces
+no finding from either command. The script lives in `okf-verify`'s Validation, where it runs over the
+whole bundle.
 
 ## Anti-Patterns
 
